@@ -18,21 +18,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\lab_Grafica\Dibujo de Primitivas 2D\Shader\core.frag">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="..\..\..\lab_Grafica\Dibujo de Primitivas 2D\Shader\core.vs">
-      <Filter>Source Files\Shader</Filter>
-    </None>
+    <ClCompile Include="..\..\Main_P3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\lab_Grafica\Dibujo de Primitivas 2D\Shader.h">
+    <ClInclude Include="..\..\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lab_Grafica\Dibujo de Primitivas 2D\Main_Dibujo2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <None Include="..\..\Shader\core.frag">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="..\..\Shader\core.vs">
+      <Filter>Source Files\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
