@@ -14,25 +14,25 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Source Files\Shader">
-      <UniqueIdentifier>{bb527f79-8d31-44e6-9f8e-9218288a0242}</UniqueIdentifier>
+      <UniqueIdentifier>{63ce7115-538d-4e7e-8228-71bef22d58b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Dibujo de Primitivas 2D\Main_Dibujo2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <None Include="..\..\..\lab_Grafica\Dibujo de Primitivas 2D\Shader\core.frag">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="..\..\..\lab_Grafica\Dibujo de Primitivas 2D\Shader\core.vs">
+      <Filter>Source Files\Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Dibujo de Primitivas 2D\Shader.h">
+    <ClInclude Include="..\..\..\lab_Grafica\Dibujo de Primitivas 2D\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Dibujo de Primitivas 2D\Shader\core.frag">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="..\..\Dibujo de Primitivas 2D\Shader\core.vs">
-      <Filter>Source Files\Shader</Filter>
-    </None>
+    <ClCompile Include="..\..\..\lab_Grafica\Dibujo de Primitivas 2D\Main_Dibujo2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
