@@ -1,10 +1,8 @@
 // Reynoso Ortega Francisco Javier
 // Práctica 3
-// 28/08/2025
-// 318312857
+// 421056697
 
 #include <iostream>
-#include <vector>
 
 //#define GLEW_STATIC
 #include <GL/glew.h>
@@ -116,8 +114,8 @@ int main() {
          0.5f,-0.5f,-0.5f, 0.0f,0.0f,1.0f,
          0.5f, 0.5f,-0.5f, 0.0f,0.0f,1.0f,
          0.5f, 0.5f,-0.5f, 0.0f,0.0f,1.0f,
-         0.5f, 0.5f, 0.5f,  0.0f,0.0f,1.0f,
-         0.5f,-0.5f, 0.5f,  0.0f,0.0f,1.0f,
+         0.5f, 0.5f,  0.5f, 0.0f,0.0f,1.0f,
+         0.5f,-0.5f,  0.5f, 0.0f,0.0f,1.0f,
 
          // Left (amarillo)
          -0.5f, 0.5f, 0.5f, 1.0f,1.0f,0.0f,
@@ -169,12 +167,11 @@ int main() {
     );
 
     glm::mat4 view = glm::lookAt(
-        glm::vec3(0.0f, 2.0f, 18.0f),   // ojo
-        glm::vec3(0.0f, 2.0f, 0.0f),    // centro
-        glm::vec3(0.0f, 1.0f, 0.0f)     // up
+        glm::vec3(0.0f, 2.0f, 18.0f),
+        glm::vec3(0.0f, 2.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)
     );
 
-    // Uniform locations
     glUseProgram(program);
     GLint uModel = glGetUniformLocation(program, "model");
     GLint uView = glGetUniformLocation(program, "view");
@@ -182,17 +179,7 @@ int main() {
     glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(projection));
     glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(view));
 
-    // Posiciones y rotaciones
-    const float S = 1.5f;
-    std::vector<glm::vec3> pos = {
-        {-6.0f, 0.0f, 0.0f}, {-3.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {3.0f, 0.0f, 0.0f}, {6.0f, 0.0f, 0.0f},
-        {-3.0f, 3.0f, 0.0f}, {0.0f, 3.0f, 0.0f}, {3.0f, 3.0f, 0.0f},
-        {0.0f, 6.0f, 0.0f}
-    };
-    std::vector<glm::vec4> rot = {
-        { 25.0f, 1,0,0 }, { 40.0f, 0,1,0 }, { -30.0f, 0,0,1 }, { 60.0f, 1,1,0 }, { 75.0f, 1,0.5f,0.5f },
-        { 20.0f, 0,1,1 }, { 90.0f, 1,0,1 }, { -45.0f, 0,1,0.5f }, { 120.0f, 1,1,0 }
-    };
+    const float S = 1.5f; // escala de los cubos
 
     // ===== Loop =====
     while (!glfwWindowShouldClose(window)) {
@@ -204,14 +191,71 @@ int main() {
         glUseProgram(program);
         glBindVertexArray(VAO);
 
-        for (int i = 0; i < (int)pos.size(); ++i) {
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, pos[i]);
-            model = glm::rotate(model, glm::radians(rot[i].x), glm::vec3(rot[i].y, rot[i].z, rot[i].w));
-            model = glm::scale(model, glm::vec3(S));
-            glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
+        // 🎲 9 cubos con sus posiciones y rotaciones
+        glm::mat4 model(1.0f);
+
+        // Cubo 1
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(-6.0f, 0.0f, 0.0f)); //Posicion
+        model = glm::rotate(model, glm::radians(25.0f), glm::vec3(1, 0, 0)); //Rota el cubo en sus diferentes caras y el angulo de inclinadcion del cubo 
+        model = glm::scale(model, glm::vec3(2.0f)); // más grandes
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // Cubo 2
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0, 1, 0));
+        model = glm::scale(model, glm::vec3(2.0f)); // más grandes
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // Cubo 3
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1, 0, 1));
+        model = glm::scale(model, glm::vec3(2.0f)); // más grandes
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // Cubo 4
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(60.0f), glm::vec3(1, 1, 0));
+        model = glm::scale(model, glm::vec3(2.0f)); // más grandes
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // Cubo 5
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(6.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(75.0f), glm::vec3(1, 0.8f, 1));
+        model = glm::scale(model, glm::vec3(2.0f)); // más grandes
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // Cubo 6
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 3.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(-20.0f), glm::vec3(1, 0, 1));
+        model = glm::scale(model, glm::vec3(1.5f)); // tamaño normal
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // Cubo 7
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 1));
+        model = glm::scale(model, glm::vec3(1.5f)); // tamaño normal
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // Cubo 8
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(0, 1, 0.5f));
+        model = glm::scale(model, glm::vec3(1.5f)); // tamaño normal
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // Cubo 9
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 6.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(130.0f), glm::vec3(1, 1, 0));
+        model = glm::scale(model, glm::vec3(1.0f)); // más chico
+        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glBindVertexArray(0);
         glfwSwapBuffers(window);
