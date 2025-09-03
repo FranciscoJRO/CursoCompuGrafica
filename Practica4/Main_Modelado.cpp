@@ -218,9 +218,9 @@ int main() {
 		// cuerpo/cabeza (bloque grande)                    //izquierrda,arriba,ADELANTE    ANCHO,ALT,PROF
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(2.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.5f, 1.0f), ORANGE);  
         // hocico (cubito frontal)
-        drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.5f, -0.05f, 0.0f), glm::vec3(0.30f, 0.25f, 0.30f), ORANGE_D);
-		//// nariz (cubito más pequeño)
-  //      drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.5f, -0.05f, 0.0f), glm::vec3(0.30f, 0.25f, 0.30f), ORANGE_D);
+        drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.5f, 0.14f, 0.0f), glm::vec3(0.10f, 0.25f, 0.60f), ORANGE_D);
+		// nariz (cubito más pequeño)
+        drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.45f, 0.15f, 0.0f), glm::vec3(0.1f, 0.25f, 0.20f), BLACK);
 		// pupilas
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.5f, 0.4f, 0.25f), glm::vec3(0.11f, 0.4f, 0.4f), BLACK );//derecho
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.5f, 0.4f, -0.25f), glm::vec3(0.11f, 0.4f, 0.4f), BLACK);//izquierdo
