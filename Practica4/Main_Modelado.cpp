@@ -1,6 +1,6 @@
-// Previo4 - escena voxel (GLFW + GLEW + GLM) - Personajes estilo Adventure Time
+Ôªø// Practica4 - escena voxel (GLFW + GLEW + GLM) - Personajes estilo Adventure Time
 // Reynoso Ortega Francisco Javier - 421056697
-// Compilar como C++11+. Vincular: opengl32.lib, glew32.lib, glfw3.lib
+// 07/09/2025
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -14,7 +14,7 @@ void PrintHelpToConsole();
 const char* WINDOW_TITLE = "Previo 4 - Francisco Javier Reynoso Ortega - 421056697";
 
 // --- Shaders embebidos ---
-// AÒadimos uniformes para forzar color por instancia
+// A√±adimos uniformes para forzar color por instancia
 const char* kVertexSrc = R"(#version 330 core
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 color;
@@ -82,12 +82,12 @@ static GLuint linkProgram(GLuint vs, GLuint fs) {
 const GLint WIDTH = 800, HEIGHT = 600;
 float movX = 0.0f, movY = -0.2f, movZ = -8.0f, rot = 15.0f;
 
-// --- VÈrtices del cubo (triangulado) con un color por cara (se ignora si usamos override) ---
+// --- V√©rtices del cubo (triangulado) con un color por cara (se ignora si usamos override) ---
 static float kCubeVerts[] = {
     // Frente (rojo)
     -0.5f,-0.5f, 0.5f, 1,0,0,  0.5f,-0.5f, 0.5f, 1,0,0,  0.5f, 0.5f, 0.5f, 1,0,0,
      0.5f, 0.5f, 0.5f, 1,0,0, -0.5f, 0.5f, 0.5f, 1,0,0, -0.5f,-0.5f, 0.5f, 1,0,0,
-     // Atr·s (verde)
+     // Atr√°s (verde)
      -0.5f,-0.5f,-0.5f, 0,1,0,  0.5f,-0.5f,-0.5f, 0,1,0,  0.5f, 0.5f,-0.5f, 0,1,0,
       0.5f, 0.5f,-0.5f, 0,1,0, -0.5f, 0.5f,-0.5f, 0,1,0, -0.5f,-0.5f,-0.5f, 0,1,0,
       // Derecha (azul)
@@ -106,7 +106,7 @@ static float kCubeVerts[] = {
 
 GLuint VAO = 0, VBO = 0;
 
-// Helper para dibujar una caja con posiciÛn/rotaciÛn/escala/color
+// Helper para dibujar una caja con posici√≥n/rotaci√≥n/escala/color
 inline void drawBox(GLuint program, GLint uModel, GLint uUseOv, GLint uOvColor,
     const glm::vec3& pos, const glm::vec3& scl,
     const glm::vec3& color, const glm::vec3& rotEulerDeg = glm::vec3(0))
@@ -159,7 +159,7 @@ int main() {
     glEnableVertexAttribArray(1);
     glBindVertexArray(0);
 
-    // ProyecciÛn
+    // Proyecci√≥n
     glm::mat4 projection = glm::perspective(glm::radians(45.0f),
         (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 
@@ -171,7 +171,7 @@ int main() {
     GLint uOvCol = glGetUniformLocation(program, "overrideColor");
     glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(projection));
 
-    // Paleta r·pida
+    // Paleta r√°pida
     auto RGB = [](float r, float g, float b) { return glm::vec3(r, g, b); };
     const glm::vec3 ORANGE = RGB(1.0f, 0.60f, 0.10f);  // Jake
     const glm::vec3 ORANGE_D = RGB(0.95f, 0.50f, 0.05f);
@@ -188,8 +188,8 @@ int main() {
     const glm::vec3 GOLD = RGB(1.00f, 0.76f, 0.18f);
     const glm::vec3 GREY = RGB(0.45f, 0.45f, 0.50f);
     const glm::vec3 BLACK = RGB(0.0f, 0.0f, 0.0f);          // negro puro
-    const glm::vec3 BROWN = RGB(0.55f, 0.27f, 0.07f);       // cafÈ estilo "saddle brown"
-    const glm::vec3 BROWN_D = glm::vec3(0.35f, 0.18f, 0.10f);// CafÈ oscuro para interior de la boca
+    const glm::vec3 BROWN = RGB(0.55f, 0.27f, 0.07f);       // caf√© estilo "saddle brown"
+    const glm::vec3 BROWN_D = glm::vec3(0.35f, 0.18f, 0.10f);// Caf√© oscuro para interior de la boca
     const glm::vec3 BMO_BEZEL = glm::vec3(0.16f, 0.55f, 0.43f); // marco oscuro de pantalla
     const glm::vec3 RED_BTN = glm::vec3(0.90f, 0.20f, 0.25f);
     const glm::vec3 BLUE_BTN = glm::vec3(0.20f, 0.55f, 0.95f);
@@ -205,7 +205,7 @@ int main() {
         glClearColor(0.60f, 0.00f, 0.60f, 1.0f); // fondo morado
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // C·mara
+        // C√°mara
         glm::mat4 view(1.0f);
         view = glm::translate(view, glm::vec3(movX, movY, movZ));
         view = glm::rotate(view, glm::radians(rot), glm::vec3(0, 1, 0));
@@ -226,7 +226,7 @@ int main() {
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(2.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.5f, 1.0f), ORANGE);  
         // hocico (cubito frontal)
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.5f, 0.14f, 0.0f), glm::vec3(0.10f, 0.25f, 0.60f), ORANGE_D);
-		// nariz (cubito m·s pequeÒo)
+		// nariz (cubito m√°s peque√±o)
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.45f, 0.15f, 0.0f), glm::vec3(0.1f, 0.25f, 0.20f), BLACK);
 		// pupilas
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.5f, 0.4f, 0.25f), glm::vec3(0.11f, 0.4f, 0.4f), BLACK );//derecho
@@ -240,44 +240,59 @@ int main() {
         // brazos                                           x      y       z
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(2.0f, -0.10f, 0.55f), glm::vec3(0.18f, 0.18f, 0.70f), ORANGE); //brazo izquierdo
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(1.15f, -0.10f, -0.56f), glm::vec3(0.70f, 0.18f, 0.18f), ORANGE);
-        // barra larga que rodea (simulaciÛn del brazo de Jake)
+        // barra larga que rodea (simulaci√≥n del brazo de Jake)
         drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(2.0f, -0.6f, 0.8f), glm::vec3(0.18f, 1.2f, 0.18f), ORANGE);
-        // --- BOCA DE JAKE: opciÛn C (borde cafÈ + interior negro) ---
-        // Borde/labio (ligeramente m·s grande)
+        // --- BOCA DE JAKE: opci√≥n C (borde caf√© + interior negro) ---
+        // Borde/labio (ligeramente m√°s grande)
         drawBox(program, uModel, uUseOv, uOvCol,
-            glm::vec3(1.48f, 0.02f, 0.0f),   // posiciÛn (x, y, z)
+            glm::vec3(1.48f, 0.02f, 0.0f),   // posici√≥n (x, y, z)
             glm::vec3(0.18f, 0.10f, 0.32f),  // escala (ancho, alto, profundidad)
             BROWN);
 
-        // Interior (un poco m·s adentro y m·s pequeÒo)
+        // Interior (un poco m√°s adentro y m√°s peque√±o)
         drawBox(program, uModel, uUseOv, uOvCol,
-            glm::vec3(1.49f, 0.02f, 0.0f),   // empujado 0.01 en +X para ìhuecoî
-            glm::vec3(0.12f, 0.06f, 0.26f),  // m·s pequeÒo para que se vea el borde
+            glm::vec3(1.49f, 0.02f, 0.0f),   // empujado 0.01 en +X para ‚Äúhueco‚Äù
+            glm::vec3(0.12f, 0.06f, 0.26f),  // m√°s peque√±o para que se vea el borde
             BLACK);
 
+        // ============== Brazo el√°stico de Jake hacia Finn ==============
+        // 1) Tramo largo horizontal (de Jake hacia Finn) a la altura de la cintura
+        drawBox(program, uModel, uUseOv, uOvCol,
+            glm::vec3(-0.4f, -1.1f, 0.80f), glm::vec3(4.9f, 0.18f, 0.20f), ORANGE);
+        //// cubre aprox. de x=2.00 a x=-2.10 en z=0.75
+
+        // 2) Subida cerca de Finn (alineamos Y con su brazo)
+        drawBox(program, uModel, uUseOv, uOvCol,
+            glm::vec3(-2.8f, -0.4f, 0.75f), glm::vec3(0.18f, 1.5f, 0.18f), ORANGE);
+
+        // 3) Giro en profundidad: de z=0.75 a z=0.25 (donde est√° el brazo de Finn)
+        drawBox(program, uModel, uUseOv, uOvCol,
+            glm::vec3(-2.80f, 0.25f, 0.50f), glm::vec3(0.18f, 0.18f, 0.50f), ORANGE);
+
+       
 
 
 
         // ==================== FINN (izquierda) ====================
-        // ó Cabeza / gorro (cubo blanco) ó
+        // ‚Äî Cabeza / gorro (cubo blanco) ‚Äî
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-2.20f, 0.80f, 0.00f),  // pos
             glm::vec3(0.70f, 0.70f, 0.70f),  // escala
             WHITE);
-        // ìorejasî del gorro (dos cubitos arriba)
+        // ‚Äúorejas‚Äù del gorro (dos cubitos arriba)
         drawBox(program, uModel, uUseOv, uOvCol,
                         //x,y,z
             glm::vec3(-2.45f, 1.15f, 0.05f), glm::vec3(0.18f, 0.18f, 0.18f), WHITE);//oreja izquierda
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-1.95f, 1.15f, -0.05f), glm::vec3(0.18f, 0.18f, 0.18f), WHITE);
 
-        // ó Cara (placa delgada SKIN al frente sobre +Z) ó
+        // ‚Äî Cara (placa delgada SKIN al frente sobre +Z) ‚Äî
         drawBox(program, uModel, uUseOv, uOvCol,
-            glm::vec3(-2.20f, 0.78f, 0.35f),  // desplaza hacia +Z para ìasomarî del gorro
+            glm::vec3(-2.20f, 0.78f, 0.35f),  // desplaza hacia +Z para ‚Äúasomar‚Äù del gorro
             glm::vec3(0.55f, 0.55f, 0.05f),
             SKIN);
 
-        // Ojos (pÌxeles negros)
+        // Ojos (p√≠xeles negros)
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-2.07f, 0.90f, 0.40f), glm::vec3(0.08f, 0.08f, 0.05f), BLACK);
         drawBox(program, uModel, uUseOv, uOvCol,
@@ -289,18 +304,18 @@ int main() {
         drawBox(program, uModel, uUseOv, uOvCol,  // diente blanco
             glm::vec3(-2.20f, 0.76f, 0.41f), glm::vec3(0.14f, 0.04f, 0.05f), WHITE);
 
-        // ó Torso (playera) y shorts ó
+        // ‚Äî Torso (playera) y shorts ‚Äî
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-2.20f, 0.11f, 0.00f), glm::vec3(0.80f, 0.70f, 0.45f), SHIRT);
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-2.20f, -0.38f, 0.00f), glm::vec3(0.75f, 0.30f, 0.45f), SHORTS);
 
-        // (Opcional) cinturÛn/pretina para separaciÛn playera/shorts
+        // (Opcional) cintur√≥n/pretina para separaci√≥n playera/shorts
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-2.20f, -0.07f, 0.00f), glm::vec3(0.78f, 0.06f, 0.46f),
             glm::vec3(0.0f, 0.55f, 0.75f)); // tono intermedio
 
-        // ó Piernas ó
+        // ‚Äî Piernas ‚Äî
         drawBox(program, uModel, uUseOv, uOvCol,   // pierna izq
             glm::vec3(-2.45f, -0.80f, 0.15f), glm::vec3(0.18f, 0.52f, 0.18f), SKIN);
         drawBox(program, uModel, uUseOv, uOvCol,   // pierna der
@@ -318,8 +333,8 @@ int main() {
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-1.95f, -1.18f, -0.15f), glm::vec3(0.20f, 0.12f, 0.28f), SHOES);
 
-        // ó Brazos ó
-        // Izquierdo: extendido hacia el costado/c·mara (+Z), para que ìrecibaî el brazo de Jake
+        // ‚Äî Brazos ‚Äî
+        // Izquierdo: extendido hacia el costado/c√°mara (+Z), para que ‚Äúreciba‚Äù el brazo de Jake
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-2.75f, 0.25f, 0.25f), glm::vec3(0.40f, 0.16f, 0.16f), SKIN);
         // antebrazo vertical para remate (como si saludara)
@@ -327,14 +342,14 @@ int main() {
             glm::vec3(-2.87f, 0.34f, 0.25f), glm::vec3(0.16f, 0.16f, 0.16f), SKIN);
 
 
-        // Derecho: levantado diagonal (usamos rotaciÛn Z)
+        // Derecho: levantado diagonal (usamos rotaci√≥n Z)
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-1.55f, 0.25f, 0.22f), glm::vec3(0.55f, 0.16f, 0.16f), SKIN);
         // antebrazo vertical para remate (como si saludara)
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-1.35f, 0.34f, 0.22f), glm::vec3(0.08f, 0.08f, 0.08f), SKIN);
 
-        // ó Mochila y tirantes ó
+        // ‚Äî Mochila y tirantes ‚Äî
         drawBox(program, uModel, uUseOv, uOvCol,  // mochila
             glm::vec3(-2.20f, 0.20f, -0.35f), glm::vec3(0.55f, 0.55f, 0.30f), BACKPACK);
         // tirantes finos al frente
@@ -344,8 +359,8 @@ int main() {
             glm::vec3(-2.45f, 0.25f, 0.32f), glm::vec3(0.10f, 0.50f, 0.06f), BACKPACK);
 
 
-        //// ============== ìBrazo el·sticoî (tubo rectangular) ==============
-        //// barra larga que rodea (simulaciÛn del brazo de Jake)
+        //// ============== ‚ÄúBrazo el√°stico‚Äù (tubo rectangular) ==============
+        //// barra larga que rodea (simulaci√≥n del brazo de Jake)
         //drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(-1.0f, -0.2f, 0.75f), glm::vec3(3.0f, 0.10f, 0.10f), ORANGE);
         //drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(0.50f, 0.65f, 0.75f), glm::vec3(0.10f, 1.60f, 0.10f), ORANGE);
         //drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(0.50f, 0.65f, -0.75f), glm::vec3(0.10f, 1.60f, 0.10f), ORANGE);
@@ -360,7 +375,7 @@ int main() {
             BMO_BODY);
 
         // ---- Pantalla con marco (bezel) ----
-        drawBox(program, uModel, uUseOv, uOvCol,  // marco (un poco m·s grande y m·s ìadentroî)
+        drawBox(program, uModel, uUseOv, uOvCol,  // marco (un poco m√°s grande y m√°s ‚Äúadentro‚Äù)
             glm::vec3(-0.10f, -0.15f, 0.23f),
             glm::vec3(0.46f, 0.36f, 0.04f),
             BMO_BEZEL);
@@ -427,7 +442,7 @@ int main() {
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-0.38f, -0.30f, 0.00f), glm::vec3(0.06f, 0.10f, 0.28f), BLACK);
 
-        // ---- Brazos (con ìcodoî) ----
+        // ---- Brazos (con ‚Äúcodo‚Äù) ----
         // izquierdo: hombro (horizontal) + antebrazo (vertical)
         drawBox(program, uModel, uUseOv, uOvCol,  // hombro
             glm::vec3(-0.42f, -0.50f, 0.00f), glm::vec3(0.28f, 0.08f, 0.08f), BLUE_ARMS);
@@ -445,17 +460,18 @@ int main() {
             glm::vec3(-0.20f, -0.95f, 0.10f), glm::vec3(0.10f, 0.25f, 0.10f), LEG_DARK);
         drawBox(program, uModel, uUseOv, uOvCol,  // pierna der
             glm::vec3(0.00f, -0.95f, -0.10f), glm::vec3(0.10f, 0.25f, 0.10f), LEG_DARK);
-        // pies (m·s anchos y oscuros)
+        // pies (m√°s anchos y oscuros)
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(-0.20f, -1.10f, 0.10f), glm::vec3(0.12f, 0.10f, 0.18f), BLACK);
         drawBox(program, uModel, uUseOv, uOvCol,
             glm::vec3(0.00f, -1.10f, -0.10f), glm::vec3(0.12f, 0.10f, 0.18f), BLACK);
 
+    
 
         //// ==================== Espada (al fondo) ====================
         //drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(3.5f, -0.50f, -2.0f), glm::vec3(0.10f, 1.30f, 0.10f), GOLD); // hoja dorada (estilo voxel)
         //drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(3.5f, 0.30f, -2.0f), glm::vec3(0.50f, 0.10f, 0.20f), GOLD); // guarda
-        //drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(3.5f, 0.55f, -2.0f), glm::vec3(0.12f, 0.35f, 0.12f), GREY); // empuÒadura
+        //drawBox(program, uModel, uUseOv, uOvCol, glm::vec3(3.5f, 0.55f, -2.0f), glm::vec3(0.12f, 0.35f, 0.12f), GREY); // empu√±adura
 
         glBindVertexArray(0);
         glfwSwapBuffers(window);
@@ -481,7 +497,7 @@ void Inputs(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)      rot -= 0.6f;
 }
 
-// GuÌa
+// Gu√≠a
 void PrintHelpToConsole() {
     std::cout <<
         "================ GUIA DE COMANDOS ================\n"
