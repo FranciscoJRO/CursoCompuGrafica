@@ -155,14 +155,14 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Main_Modelado.cpp" />
+    <None Include="..\Shader\core.frag" />
+    <None Include="..\Shader\core.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Modelado_Jerarquico.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Shader\core.frag" />
-    <None Include="..\Shader\core.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
