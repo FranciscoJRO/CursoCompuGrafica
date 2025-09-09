@@ -1,8 +1,9 @@
-//Francisco Javier Reynoso Ortega 
-//421056697
-//Previo 5
-//08/09/2025
-#include<iostream>
+ï»¿// Francisco Javier Reynoso Ortega 
+// 421056697
+// Previo 5
+// 08/09/2025
+#include <iostream>
+#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -18,7 +19,7 @@ out vec3 ourColor;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat4 transform;   // declarado para mantener compatibilidad si lo usas
+uniform mat4 transform;
 uniform vec3 color;
 
 void main()
@@ -38,298 +39,274 @@ void main()
 }
 )";
 
-// ===== Implementación mínima de Shader (mismo uso que en tu código) =====
+// ===== ImplementaciÃ³n mÃ­nima de Shader =====
 struct Shader {
-	GLuint Program = 0;
-	GLint uniformColor = -1;
+    GLuint Program = 0;
+    GLint uniformColor = -1;
 
-	static GLuint compile(GLenum type, const char* src) {
-		GLuint sh = glCreateShader(type);
-		glShaderSource(sh, 1, &src, nullptr);
-		glCompileShader(sh);
-		GLint ok = GL_FALSE;
-		glGetShaderiv(sh, GL_COMPILE_STATUS, &ok);
-		if (!ok) {
-			GLint len = 0; glGetShaderiv(sh, GL_INFO_LOG_LENGTH, &len);
-			std::string log(len, '\0');
-			glGetShaderInfoLog(sh, len, nullptr, log.data());
-			std::cerr << "[Shader] Error compilando "
-				<< (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
-				<< ":\n" << log << "\n";
-			glDeleteShader(sh);
-			return 0;
-		}
-		return sh;
-	}
+    static GLuint compile(GLenum type, const char* src) {
+        GLuint sh = glCreateShader(type);
+        glShaderSource(sh, 1, &src, nullptr);
+        glCompileShader(sh);
+        GLint ok = GL_FALSE;
+        glGetShaderiv(sh, GL_COMPILE_STATUS, &ok);
+        if (!ok) {
+            GLint len = 0; glGetShaderiv(sh, GL_INFO_LOG_LENGTH, &len);
+            std::string log(len, '\0');
+            glGetShaderInfoLog(sh, len, nullptr, log.data());
+            std::cerr << "[Shader] Error compilando "
+                << (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
+                << ":\n" << log << "\n";
+            glDeleteShader(sh);
+            return 0;
+        }
+        return sh;
+    }
 
-	Shader(const char* vsSrc, const char* fsSrc) {
-		GLuint vs = compile(GL_VERTEX_SHADER, vsSrc);
-		GLuint fs = compile(GL_FRAGMENT_SHADER, fsSrc);
-		if (!vs || !fs) return;
+    Shader(const char* vsSrc, const char* fsSrc) {
+        GLuint vs = compile(GL_VERTEX_SHADER, vsSrc);
+        GLuint fs = compile(GL_FRAGMENT_SHADER, fsSrc);
+        if (!vs || !fs) return;
 
-		Program = glCreateProgram();
-		glAttachShader(Program, vs);
-		glAttachShader(Program, fs);
-		glLinkProgram(Program);
+        Program = glCreateProgram();
+        glAttachShader(Program, vs);
+        glAttachShader(Program, fs);
+        glLinkProgram(Program);
 
-		GLint ok = GL_FALSE;
-		glGetProgramiv(Program, GL_LINK_STATUS, &ok);
-		if (!ok) {
-			GLint len = 0; glGetProgramiv(Program, GL_INFO_LOG_LENGTH, &len);
-			std::string log(len, '\0');
-			glGetProgramInfoLog(Program, len, nullptr, log.data());
-			std::cerr << "[Shader] Error enlazando programa:\n" << log << "\n";
-			glDeleteProgram(Program);
-			Program = 0;
-		}
+        GLint ok = GL_FALSE;
+        glGetProgramiv(Program, GL_LINK_STATUS, &ok);
+        if (!ok) {
+            GLint len = 0; glGetProgramiv(Program, GL_INFO_LOG_LENGTH, &len);
+            std::string log(len, '\0');
+            glGetProgramInfoLog(Program, len, nullptr, log.data());
+            std::cerr << "[Shader] Error enlazando programa:\n" << log << "\n";
+            glDeleteProgram(Program);
+            Program = 0;
+        }
 
-		glDeleteShader(vs);
-		glDeleteShader(fs);
+        glDeleteShader(vs);
+        glDeleteShader(fs);
 
-		if (Program) {
-			uniformColor = glGetUniformLocation(Program, "color");
-		}
-	}
+        if (Program) {
+            uniformColor = glGetUniformLocation(Program, "color");
+        }
+    }
 
-	void Use() const { glUseProgram(Program); }
+    void Use() const { glUseProgram(Program); }
 };
 
 void Inputs(GLFWwindow* window);
 
 const GLint WIDTH = 1200, HEIGHT = 800;
 
-//For Keyboard
-float	movX = 0.0f,
-movY = 0.0f,
-movZ = -5.0f,
-rot = 0.0f;
+// Controles cÃ¡mara
+float movX = 0.0f, movY = 0.0f, movZ = -5.0f, rot = 0.0f;
 
-//For model
-float	hombro = 0.0f;
-float	antebrazo = 0.0f;
+// Articulaciones
+float hombro = 0.0f;
+float antebrazo = 0.0f; // (se mantiene)
 float codo = 0.0f;
-
+float muneca = 0.0f;
+float dedo1 = 0.0f;
+float dedo2 = 0.0f;
 
 int main() {
-	glfwInit();
-	//Verificación de compatibilidad 
-	// Set all the required options for GLFW
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  //  glfwWindowHint(GLFW_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Francisco Javier Reynoso Ortega Previo 5", nullptr, nullptr);
 
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Francisco Javier Reynoso Ortega Previo 5", nullptr, nullptr);
+    int screenWidth, screenHeight;
+    glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 
-	int screenWidth, screenHeight;
+    if (nullptr == window) {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return EXIT_FAILURE;
+    }
 
-	glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
+    glfwMakeContextCurrent(window);
+    glewExperimental = GL_TRUE;
+    if (GLEW_OK != glewInit()) {
+        std::cout << "Failed to initialise GLEW" << std::endl;
+        return EXIT_FAILURE;
+    }
 
-	//Verificación de errores de creacion  ventana
-	if (nullptr == window)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
+    glViewport(0, 0, screenWidth, screenHeight);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		return EXIT_FAILURE;
-	}
+    Shader ourShader(kVertexSrc, kFragmentSrc);
 
-	glfwMakeContextCurrent(window);
-	glewExperimental = GL_TRUE;
+    // Cubo
+    float vertices[] = {
+        -0.5f,-0.5f, 0.5f,  0.5f,-0.5f, 0.5f,  0.5f, 0.5f, 0.5f,
+         0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f,-0.5f, 0.5f,
 
-	//Verificación de errores de inicialización de glew
+        -0.5f,-0.5f,-0.5f,  0.5f,-0.5f,-0.5f,  0.5f, 0.5f,-0.5f,
+         0.5f, 0.5f,-0.5f, -0.5f, 0.5f,-0.5f, -0.5f,-0.5f,-0.5f,
 
-	if (GLEW_OK != glewInit()) {
-		std::cout << "Failed to initialise GLEW" << std::endl;
-		return EXIT_FAILURE;
-	}
+         0.5f,-0.5f, 0.5f,  0.5f,-0.5f,-0.5f,  0.5f, 0.5f,-0.5f,
+         0.5f, 0.5f,-0.5f,  0.5f, 0.5f, 0.5f,  0.5f,-0.5f, 0.5f,
 
-	// Define las dimensiones del viewport
-	glViewport(0, 0, screenWidth, screenHeight);
+        -0.5f, 0.5f, 0.5f, -0.5f, 0.5f,-0.5f, -0.5f,-0.5f,-0.5f,
+        -0.5f,-0.5f,-0.5f, -0.5f,-0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
 
-	// Setup OpenGL options
-	glEnable(GL_DEPTH_TEST);
+        -0.5f,-0.5f,-0.5f,  0.5f,-0.5f,-0.5f,  0.5f,-0.5f, 0.5f,
+         0.5f,-0.5f, 0.5f, -0.5f,-0.5f, 0.5f, -0.5f,-0.5f,-0.5f,
 
-	// enable alpha support
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        -0.5f, 0.5f,-0.5f,  0.5f, 0.5f,-0.5f,  0.5f, 0.5f, 0.5f,
+         0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f,-0.5f
+    };
 
-	// Build and compile our shader program (usando los embebidos)
-	Shader ourShader(kVertexSrc, kFragmentSrc);
+    GLuint VBO, VAO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
-	// Set up vertex data (and buffer(s)) and attribute pointers
-	// use with Orthographic Projection
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+        (GLfloat)screenWidth / (GLfloat)screenHeight,
+        0.1f, 100.0f);
+    glm::vec3 color = glm::vec3(0.0f, 0.0f, 1.0f);
 
-	// use with Perspective Projection
-	float vertices[] = {
-		-0.5f, -0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f,
-		0.5f,  0.5f, 0.5f,
-		0.5f,  0.5f, 0.5f,
-		-0.5f,  0.5f, 0.5f,
-		-0.5f, -0.5f, 0.5f,
+    while (!glfwWindowShouldClose(window)) {
+        Inputs(window);
+        glfwPollEvents();
 
-		-0.5f, -0.5f,-0.5f,
-		 0.5f, -0.5f,-0.5f,
-		 0.5f,  0.5f,-0.5f,
-		 0.5f,  0.5f,-0.5f,
-		-0.5f,  0.5f,-0.5f,
-		-0.5f, -0.5f,-0.5f,
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		 0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  -0.5f, 0.5f,
+        ourShader.Use();
 
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 modelTemp = glm::mat4(1.0f);
+        glm::mat4 modelTemp2 = glm::mat4(1.0f);
 
-		-0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f,  0.5f,
-		0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f, -0.5f,
+        view = glm::translate(view, glm::vec3(movX, movY, movZ));
+        view = glm::rotate(view, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		-0.5f,  0.5f, -0.5f,
-		0.5f,  0.5f, -0.5f,
-		0.5f,  0.5f,  0.5f,
-		0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
-	};
+        GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
+        GLint viewLoc = glGetUniformLocation(ourShader.Program, "view");
+        GLint projecLoc = glGetUniformLocation(ourShader.Program, "projection");
+        GLint transformLoc = glGetUniformLocation(ourShader.Program, "transform");
+        GLint uniformColor = ourShader.uniformColor;
 
-	GLuint VBO, VAO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	//glGenBuffers(1, &EBO);
+        glm::mat4 transform = glm::mat4(1.0f);
+        glUniformMatrix4fv(projecLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
-	// Enlazar  Vertex Array Object
-	glBindVertexArray(VAO);
+        glBindVertexArray(VAO);
 
-	//2.- Copiamos nuestros arreglo de vertices en un buffer de vertices para que OpenGL lo use
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        // ===== Brazo (VERDE) =====
+        model = glm::rotate(model, glm::radians(hombro), glm::vec3(0.0f, 0.0f, 1.0f));
+        modelTemp = model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f)); // guardar base antes del scale
+        model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
+        color = glm::vec3(0.0f, 1.0f, 0.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	//Posicion
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
+        // ===== Base del codo =====
+        glm::mat4 baseCodo = modelTemp;
+        baseCodo = glm::translate(baseCodo, glm::vec3(1.5f, 0.0f, 0.0f));
+        baseCodo = glm::rotate(baseCodo, glm::radians(codo), glm::vec3(0.0f, 0.0f, 1.0f));
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0); // Unbind VAO
+        // ===== Antebrazo (ROJO, largo 2.0) =====
+        model = baseCodo;
+        model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(2.0f, 1.0f, 1.0f));
+        color = glm::vec3(1.0f, 0.0f, 0.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	glm::mat4 projection = glm::mat4(1);
-	projection = glm::perspective(glm::radians(45.0f), (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);//FOV, Radio de aspecto,znear,zfar
-	glm::vec3 color = glm::vec3(0.0f, 0.0f, 1.0f);
+        // ===== MuÃ±eca (BLANCA, largo 0.5) =====
+        model = baseCodo;
+        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f)); // fin del antebrazo
+        model = glm::rotate(model, glm::radians(muneca), glm::vec3(0.0f, 0.0f, 1.0f));
+        modelTemp2 = model; // por si agregas mano
+        model = glm::translate(model, glm::vec3(0.25f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.5f, 1.0f, 1.0f));
+        color = glm::vec3(1.0f, 1.0f, 1.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	while (!glfwWindowShouldClose(window))
-	{
-		Inputs(window);
-		glfwPollEvents();
+        // ===== Base de la muÃ±eca para dedos =====
+        glm::mat4 baseMuneca = modelTemp;
+        baseMuneca = glm::translate(baseMuneca, glm::vec3(1.5f, 0.0f, 0.0f)); // codo
+        baseMuneca = glm::rotate(baseMuneca, glm::radians(codo), glm::vec3(0.0f, 0.0f, 1.0f));
+        baseMuneca = glm::translate(baseMuneca, glm::vec3(2.0f, 0.0f, 0.0f)); // fin antebrazo
+        baseMuneca = glm::rotate(baseMuneca, glm::radians(muneca), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		// Render
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // ===== Dedo1 (CIAN, falange A) =====
+        model = glm::translate(baseMuneca, glm::vec3(0.25f, 0.35f, 0.375f)); // posiciÃ³n en la "palma"
+        model = glm::rotate(model, glm::radians(dedo1), glm::vec3(0.0f, 0.0f, 1.0f));
+        modelTemp = model = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f)); // centro de falange A (largo 1.0)
+        model = glm::scale(model, glm::vec3(1.0f, 0.3f, 0.25f));
+        color = glm::vec3(0.0f, 1.0f, 1.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // C
 
-		ourShader.Use();
-		glm::mat4 model = glm::mat4(1);
-		glm::mat4 view = glm::mat4(1);
-		glm::mat4 modelTemp = glm::mat4(1.0f); //Temp
-		glm::mat4 modelTemp2 = glm::mat4(1.0f); //Temp
+        // ===== Dedo1 B (MAGENTA, falange B) =====
+        // Usa 'modelTemp' que quedÃ³ en el CENTRO de la falange A
+        model = glm::translate(modelTemp, glm::vec3(0.5f, 0.0f, 0.0f));          // ir al extremo distal de A
+        model = glm::rotate(model, glm::radians(dedo2), glm::vec3(0.0f, 0.0f, 1.0f)); // rotaciÃ³n del nudillo interfalÃ¡ngico
+        model = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));              // centrar falange B (largo 1.0)
+        model = glm::scale(model, glm::vec3(1.0f, 0.3f, 0.25f));                 // mismas dimensiones
+        color = glm::vec3(1.0f, 0.0f, 1.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // D
 
-		//View set up 
-		view = glm::translate(view, glm::vec3(movX, movY, movZ));
-		view = glm::rotate(view, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
+        glBindVertexArray(0);
+        glfwSwapBuffers(window);
+    }
 
-		GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
-		GLint viewLoc = glGetUniformLocation(ourShader.Program, "view");
-		GLint projecLoc = glGetUniformLocation(ourShader.Program, "projection");
-		GLint transformLoc = glGetUniformLocation(ourShader.Program, "transform"); // por si lo usas
-		GLint uniformColor = ourShader.uniformColor;
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    if (ourShader.Program) glDeleteProgram(ourShader.Program);
 
-		// Si no usas transform, mandamos identidad (para mantener compatibilidad)
-		glm::mat4 transform = glm::mat4(1.0f);
-
-		glUniformMatrix4fv(projecLoc, 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-
-		glBindVertexArray(VAO);
-
-		// ===== Model =====
-		// Hombro
-		model = glm::rotate(model, glm::radians(hombro), glm::vec3(0.0f, 0.0, 1.0f)); //hombro
-		modelTemp = model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
-		color = glm::vec3(0.0f, 1.0f, 0.0f);
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36);//A
-
-		// --- Antebrazo usando modelTemp ---
-		model = modelTemp;                                            // base: hombro ya rotado y trasladado (sin escalar)
-		model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));   // mover al codo (extremo del brazo: brazo=3.0 -> mitad=1.5)
-		model = glm::rotate(model, glm::radians(codo), glm::vec3(0.0f, 0.0f, 1.0f)); // rotar en el codo
-		modelTemp2 = model;                                           // opcional: guardar para la mano
-		model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));   // llevar al centro del antebrazo (largo/2 = 1.0)
-		model = glm::scale(model, glm::vec3(2.0f, 1.0f, 1.0f));       // escalar antebrazo (largo=2.0)
-
-		color = glm::vec3(1.0f, 0.0f, 0.0f);                          // rojo para distinguir
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// --- Fin antebrazo ---
-
-
-		glBindVertexArray(0);
-
-		// Swap buffers
-		glfwSwapBuffers(window);
-	}
-
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-
-	if (ourShader.Program) glDeleteProgram(ourShader.Program);
-
-	glfwTerminate();
-	return EXIT_SUCCESS;
+    glfwTerminate();
+    return EXIT_SUCCESS;
 }
 
 void Inputs(GLFWwindow* window) {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  //GLFW_RELEASE
-		glfwSetWindowShouldClose(window, true);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		movX += 0.08f;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		movX -= 0.08f;
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		movY += 0.08f;
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		movY -= 0.08f;
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		movZ -= 0.08f;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		movZ += 0.08f;
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		rot += 0.18f;
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		rot -= 0.18f;
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-		hombro += 0.18f;
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-		hombro -= 0.18f;
-	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) codo += 0.25f;
-	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) codo -= 0.25f;
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) movX += 0.08f;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) movX -= 0.08f;
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) movY += 0.08f;
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) movY -= 0.08f;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) movZ -= 0.08f;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) movZ += 0.08f;
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) rot += 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) rot -= 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) hombro += 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) hombro -= 0.18f;
 
+    // Articulaciones
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) codo += 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) codo -= 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) muneca += 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) muneca -= 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) dedo1 += 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) dedo1 -= 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) dedo2 += 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) dedo2 -= 0.18f;
 }
