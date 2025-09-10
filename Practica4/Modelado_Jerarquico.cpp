@@ -1,4 +1,11 @@
-﻿#include <iostream>
+﻿//Francisco Javier Reynoso ORtega
+//421056697
+//Practica 5
+//14/09/2025
+
+
+
+#include <iostream>
 #include <vector>
 #include <string>
 #include <GL/glew.h>
@@ -111,7 +118,7 @@ int main() {
 #endif
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Previo 5 Juan Soria", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 5 Francisco Javier Reynoso Ortega", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
@@ -297,8 +304,8 @@ void Inputs(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) rot += 0.18f;
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) rot -= 0.18f;
 
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) hombro += 0.18f;
-    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) hombro -= 0.18f;
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) hombro += 0.25f;
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) hombro -= 0.25f;
     if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) codo += 0.18f;
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) codo -= 0.18f;
     if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) muneca += 0.18f;
