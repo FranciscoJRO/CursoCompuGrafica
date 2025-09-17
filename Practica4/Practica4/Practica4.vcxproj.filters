@@ -18,21 +18,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shader\core.frag">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="..\Shader\core.vs">
-      <Filter>Source Files\Shader</Filter>
-    </None>
+    <ClInclude Include="..\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Modelado_Jerarquico.cpp">
+    <ClCompile Include="..\Carga de Modelos.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include="Shader\modelLoading.frag">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="Shader\modelLoading.vs">
+      <Filter>Source Files\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
