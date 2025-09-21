@@ -1,0 +1,13 @@
+# Old_bath.mtl (limpio)
+newmtl Old_Bath_Mat
+Ka 0.10 0.10 0.10
+Kd 0.80 0.80 0.80
+Ks 0.00 0.00 0.00
+Ns 32
+Ni 1.00
+d 1.0
+illum 2
+
+map_Kd   Old_Bath_color.png
+# Actívalo solo si tu shader soporta normal mapping:
+# map_Bump -bm 1.0 Old_Bath_nrm.png

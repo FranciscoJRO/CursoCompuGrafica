@@ -1,0 +1,16 @@
+# Blender 4.0.1
+newmtl Toilet_Brush
+
+Ka 0.10 0.10 0.10
+Kd 0.80 0.80 0.80
+Ks 0.00 0.00 0.00
+Ns 32.0
+Ni 1.45
+d 1.0
+illum 2
+
+# Textura difusa (color base)
+map_Kd Toilet_Brush_LP_Toilet_Brush_BaseColor.png
+
+# Normal map (solo si tu shader lo soporta, si no coméntalo)
+map_Bump -bm 1.0 Toilet_Brush_LP_Toilet_Brush_Normal.png

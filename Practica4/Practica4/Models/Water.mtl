@@ -1,0 +1,12 @@
+# Water.mtl (limpio)
+newmtl Water_Mat
+Ka 0.00 0.00 0.00
+Kd 1.00 1.00 1.00
+Ks 0.00 0.00 0.00
+Ns 1
+Ni 1.00
+d 0.6              # transparencia base (opcional)
+Tr 0.4             # (equivalente a 1-d; algunos loaders usan Tr)
+illum 2
+
+map_Kd Water.png   # PNG con canal alpha preferentemente

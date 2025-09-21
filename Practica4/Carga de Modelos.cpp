@@ -1,4 +1,4 @@
-// Francisco Javier Reynoso Ortega
+﻿// Francisco Javier Reynoso Ortega
 // 421056697
 // Previo 6 Carga de Modelos
 // 16/09/2025
@@ -76,11 +76,21 @@ int main()
     // ===== Carga de modelos =====
     Model dog((char*)"Models/RedDog.obj");
 
-    // Reemplazo: usar tu Car.obj en lugar de la Mercedes
-    // Coloca Car.obj, Car.mtl y las texturas en: Models/Car/
-    Model car((char*)"Models/Car.obj");
 
-    // Proyecci�n (una sola vez)
+    // Nuevo: Alligator
+    Model gator((char*)"Models/Aligator_Quad.obj");
+
+    //Modelo toilet brush
+	Model toiletBrush((char*)"Models/Toilet_Brush.obj");
+
+
+    // Nuevos
+    Model bath((char*)"Models/Old_bath.obj");
+    Model faucet((char*)"Models/Faucet.obj");
+    Model water((char*)"Models/Water.obj");  // malla de agua
+
+
+    // Proyección (una sola vez)
     glm::mat4 projection = glm::perspective(
         camera.GetZoom(),
         (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
@@ -101,31 +111,98 @@ int main()
 
         shader.Use();
 
+        // ===== matrices comunes =====
         glm::mat4 view = camera.GetViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
+        // ===== localiza uniforms una vez por frame =====
+        const GLint locModel = glGetUniformLocation(shader.Program, "model");
+        const GLint locIsTransparent = glGetUniformLocation(shader.Program, "uIsTransparent");
+        const GLint locAlphaFallback = glGetUniformLocation(shader.Program, "uAlphaFallback");
+
+        // ------------------------------------------------------------------
+        // 1) OPAQUE FIRST (perro, caimán, tina, llave)
+        // ------------------------------------------------------------------
+        glUniform1i(locIsTransparent, GL_FALSE);
+        glUniform1f(locAlphaFallback, 1.0f);
+
         glm::mat4 model(1.0f);
 
-        // Perrito 1
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        // Dog
+        model = glm::mat4(1.0f);
+        glUniformMatrix4fv(locModel, 1, GL_FALSE, glm::value_ptr(model));
         dog.Draw(shader);
 
-        // Perrito 2
-        model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        dog.Draw(shader);
+        // Gator (a la izquierda del perro si quieres)
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-1.8f, -0.1f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.6f));
+        glUniformMatrix4fv(locModel, 1, GL_FALSE, glm::value_ptr(model));
+        gator.Draw(shader);
 
-        // ===== Carro (Car.obj) =====
-        model = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f));
-        // Ajusta escala seg�n el tama�o de tu modelo
-        model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+        // Old Bath (escalada pequeña)
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(2.0f, -0.20f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.005f));   // ajusta a gusto (0.05–0.20)
+        glUniformMatrix4fv(locModel, 1, GL_FALSE, glm::value_ptr(model));
+        bath.Draw(shader);
+
+        // Faucet (llave) cerca de la tina
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(2.20f, 0.00f, 0.05f));
+        model = glm::scale(model, glm::vec3(0.005f));
+        glUniformMatrix4fv(locModel, 1, GL_FALSE, glm::value_ptr(model));
+        faucet.Draw(shader);
+
+        // ===== Toilet Brush (a la derecha del perrito) =====
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(1.2f, -0.8f, 0.0f)); // x positivo = derecha
+        model = glm::scale(model, glm::vec3(0.5f));                   // un poco más pequeño
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        car.Draw(shader);
+        toiletBrush.Draw(shader);
+
+        // ------------------------------------------------------------------
+// 2) TRANSPARENT LAST (agua)
+// ------------------------------------------------------------------
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // No escribir en el z-buffer (pero sí leerlo) para mezclar bien
+        glDepthMask(GL_FALSE);
+
+        // Uniforms para agua
+        glUniform1i(locIsTransparent, GL_TRUE);
+        glUniform1f(locAlphaFallback, 1.0f);             // << opacidad que verás (0.25–0.5 va bien)
+
+        // Tinte opcional
+        GLint locUseTint = glGetUniformLocation(shader.Program, "uUseTint");
+        GLint locTint = glGetUniformLocation(shader.Program, "uTint");
+        glUniform1i(locUseTint, GL_TRUE);                 // pon GL_FALSE si no quieres tinte
+        glUniform3f(locTint, 0.25f, 0.45f, 0.55f);        // azul verdoso suave
+
+        // (Opcional) evitar problemas por caras traseras del plano del agua
+        // glDisable(GL_CULL_FACE);
+
+        model = glm::mat4(1.0f);                  // ✅ solo reasignas
+        model = glm::translate(model, glm::vec3(2.0f, -0.18f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.005f));
+        glUniformMatrix4fv(locModel, 1, GL_FALSE, glm::value_ptr(model));
+        water.Draw(shader);
+        // Restaurar estado
+        // glEnable(GL_CULL_FACE);
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);
+
+        // Deja listos los uniforms para lo opaco
+        glUniform1i(locIsTransparent, GL_FALSE);
+        glUniform1f(locAlphaFallback, 1.0f);
+        glUniform1i(locUseTint, GL_FALSE);
+
 
         glfwSwapBuffers(window);
     }
+
 
     glfwTerminate();
     return 0;
