@@ -1,7 +1,7 @@
 ﻿// Francisco Javier Reynoso Ortega
 // 421056697
-// Previo 6 Carga de Modelos
-// 16/09/2025
+//Practica 6 Carga de Modelos
+// 21/09/2025
 
 #include <iostream>
 #include <string>
@@ -157,7 +157,7 @@ int main()
 
         // ===== Toilet Brush (a la derecha del perrito) =====
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(1.2f, -0.8f, 0.0f)); // x positivo = derecha
+        model = glm::translate(model, glm::vec3(1.2f, -0.4f, 0.0f)); // x positivo = derecha
         model = glm::scale(model, glm::vec3(0.5f));                   // un poco más pequeño
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         toiletBrush.Draw(shader);
