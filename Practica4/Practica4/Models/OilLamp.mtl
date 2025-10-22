@@ -1,0 +1,21 @@
+# OilLamp.mtl  (mínimo necesario y correcto)
+
+newmtl default
+Ns 64
+Ni 1.5
+d 1.0
+Tr 0.0
+illum 2
+
+# No tiñas la textura (deja el albedo tal cual)
+Ka 1.0 1.0 1.0
+Kd 1.0 1.0 1.0
+Ks 0.2 0.2 0.2
+
+# Texturas (nombres y mayúsculas EXACTOS)
+map_Kd   Oil_Lamp_Color.PNG
+map_Ks   Oil_Lamp_Gloss.png
+map_Bump Oil_Lamp_Normal.png
+map_Ke   Oil_Lamp_Emissive.jpg
+
+

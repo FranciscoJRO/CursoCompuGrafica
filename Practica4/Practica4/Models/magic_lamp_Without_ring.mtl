@@ -1,0 +1,15 @@
+newmtl magic_lamp_MT
+Ns 64.0000
+Ni 1.5000
+d 1.0000
+Tr 0.0000
+illum 2
+Ka 0.0500 0.0500 0.0500
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+Ke 0.0000 0.0000 0.0000
+
+# Texturas (pon los archivos .png/.jpg en la MISMA carpeta del .obj/.mtl)
+map_Kd magic_lamp_diffuse.png
+map_Ks magic_lamp_specular.png         # opcional
+map_Bump magic_lamp_normal.png         # opcional (también puede ser: bump ...)

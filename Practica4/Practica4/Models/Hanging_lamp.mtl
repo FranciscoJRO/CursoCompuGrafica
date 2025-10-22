@@ -1,0 +1,35 @@
+# Hanging_lamp.mtl
+
+newmtl Hanging_lamp_MT
+Ns 64.0000
+Ni 1.5000
+d 1.0000
+Tr 0.0000
+illum 2
+# Pon 1,1,1 para no teñir la textura:
+Ka 1.0000 1.0000 1.0000
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+
+# --- Texturas principales ---
+# Albedo/Base Color (usa UNA; Color o Diffuse)
+map_Kd Hanging_lamp_Color.png
+# map_Kd Hanging_lamp_Diffuse.png   # <- alternativa si prefieres Diffuse
+
+# Especular/Brillo (usa UNA; Specular o Glossiness)
+map_Ks Hanging_lamp_Specular.png
+# map_Ks Hanging_lamp_Glossiness.png  # <- alternativa si no tienes Specular
+
+# Normal map (tangent space)
+map_Bump Hanging_lamp_Normal.png
+# (equivalente) bump Hanging_lamp_Normal.png -bm 1.0
+
+# Emisión (para que el foco “brille” visualmente)
+map_Ke Hanging_lamp_Emissive.png
+
+# Ambient Occlusion (no siempre lo leen; opcional)
+map_Ka Hanging_lamp_AO.png
+
+# PBR (no estándar en MTL; opcional, solo si tu loader lo soporta)
+# map_Pr Hanging_lamp_Roughness.png
+# map_Pm Hanging_lamp_Metallic.png

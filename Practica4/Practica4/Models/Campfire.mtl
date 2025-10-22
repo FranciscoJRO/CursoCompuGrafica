@@ -1,0 +1,62 @@
+# Blender 3.4.0 MTL File: 'Campfire.blend'
+# www.blender.org
+
+newmtl ambientCG/Rock035/1K-PNG
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd Rock035_1K_Color.png
+map_Pr Rock035_1K_Roughness.png
+
+newmtl ambientCG/Rock047/1K-PNG
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd Rock047_1K_Color.png
+map_Pr Rock047_1K_Roughness.png
+
+newmtl ambientCG/TreeEnd001/1K-PNG
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd TreeEnd001_1K_Color.png
+map_Pr TreeEnd001_1K_Roughness.png
+
+newmtl ambientCG/Wood006/1K-PNG
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd Wood006_1K_Color.png
+map_Pr Wood006_1K_Roughness.png
